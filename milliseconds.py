@@ -81,11 +81,14 @@ if __name__ == '__main__':
             linecounter += 1
 
             match = re.search(lineformat, l)
+
             if not match:
                 print("Unexpected log line contents:")
                 pprint(l)
+                sys.exit(1)
+            else:
+                data = match.groupdict()
 
-            data = match.groupdict()
             if len(data) != 14:
                 print("Unexpected log line contents:")
                 pprint(l)

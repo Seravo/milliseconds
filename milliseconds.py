@@ -60,10 +60,10 @@ lineformat = (r''
               '(?P<protocol>[^ ]+)" '
               '(?P<status>[0-9]+) '
               '(?P<bytes>[0-9]+) '
-              '"(?P<referer>[^"]+)" '
+              '"(?P<referer>[^"]*)" '
               '"(?P<user_agent>[^"]*)" '
               '(?P<cache>[A-Z-]+) '
-              '(?P<php>[^ ]+) '
+              '"(?P<php>[^"]+)" '
               '(?P<duration>[0-9\.]+)\n'
               )
 

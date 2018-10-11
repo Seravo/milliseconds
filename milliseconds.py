@@ -63,7 +63,7 @@ lineformat = (r''
               '"(?P<referer>[^"]*)" '
               '"(?P<user_agent>[^"]*)" '
               '(?P<cache>[A-Z-]+) '
-              '"(?P<php>[^"]+)" '
+              '"(?P<server>[^"]+)" '
               '(?P<duration>[0-9\.]+)\n'
               )
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':
                 data['duration'] = int(float(data['duration']) * 1000)
                 add_counters(data, 'total')
 
-            if data['php'] == '-':
+            if data['server'] == '-':
                 add_counters(data, 'php_total')
 
                 if 'HIT' in data['cache']:

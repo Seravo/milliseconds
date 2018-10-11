@@ -49,6 +49,15 @@ result = {
     "internal": dict(bucket)
 }
 
+debug = False
+result_types = {
+  "request_type": dict(),
+  "protocol": dict(),
+  "status": dict(),
+  "cache": dict(),
+  "server": dict()
+}
+
 lineformat = (r''
               '(?P<hostname>[^ ]+) '
               '(?P<remote_addr>[^ ]+) '
@@ -72,9 +81,8 @@ linecounter = 0
 
 
 if __name__ == '__main__':
-    # pprint(result)
 
-    # Open input CSV and interate all lines
+    # Open input log and interate all lines
     with open(sys.argv[1], 'r') as f:
 
         for l in f.readlines():
@@ -93,12 +101,14 @@ if __name__ == '__main__':
                 print("Unexpected log line length: %d" % len(data))
                 pprint(l)
                 sys.exit(1)
-            else:
-                # print("Line %d: 15 items" % linecounter)
-                pass
 
-            # if data and linecounter > 9995:
-            #    pprint(data)
+            # Debug log data types
+            if debug:
+                for type in result_types.keys():
+                    if data[type] not in result_types[type]:
+                        result_types[type][data[type]] = 1
+                    else:
+                        result_types[type][data[type]] += 1
 
             # Analyze line and update counters
             if data:
@@ -128,3 +138,10 @@ if __name__ == '__main__':
                 add_counters(data, 'internal')
 
         print(json.dumps(result, indent=4))
+
+        # Debug: print log data types
+        if debug:
+            print("Total lines analyzed: %d" % linecounter)
+            print("Total requests calculated: %d" % result['total']['num_requests'])
+            print("Log data types:")
+            pprint(result_types)

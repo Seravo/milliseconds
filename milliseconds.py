@@ -90,8 +90,9 @@ if __name__ == '__main__':
                 data = match.groupdict()
 
             if len(data) != 14:
-                print("Unexpected log line contents:")
+                print("Unexpected log line length: %d" % len(data))
                 pprint(l)
+                sys.exit(1)
             else:
                 # print("Line %d: 15 items" % linecounter)
                 pass

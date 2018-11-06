@@ -32,11 +32,11 @@ def add_counters(data, category):
 
 bucket = {
     "num_requests": 0,
-    "min": 0,
-    "max": 0,
-    "avg": 0,
-    "sum": 0,
-    #  "95th_percentile": 0
+    'min': 0,
+    'max': 0,
+    'avg': 0,
+    'sum': 0,
+    #  '95th_percentile': 0
 }
 result = {
     "total": dict(bucket),
@@ -51,11 +51,11 @@ result = {
 
 debug = False
 result_types = {
-  "request_type": dict(),
-  "protocol": dict(),
-  "status": dict(),
-  "cache": dict(),
-  "server": dict()
+  'request_type': dict(),
+  'protocol': dict(),
+  'status': dict(),
+  'cache': dict(),
+  'server': dict()
 }
 
 lineformat = (r''
@@ -91,14 +91,14 @@ if __name__ == '__main__':
             match = re.search(lineformat, l)
 
             if not match:
-                print("Unexpected log line contents:")
+                print('Unexpected log line contents:')
                 pprint(l)
                 sys.exit(1)
             else:
                 data = match.groupdict()
 
             if len(data) != 14:
-                print("Unexpected log line length: %d" % len(data))
+                print('Unexpected log line length: %d' % len(data))
                 pprint(l)
                 sys.exit(1)
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
 
         # Debug: print log data types
         if debug:
-            print("Total lines analyzed: %d" % linecounter)
-            print("Total requests calculated: %d" % result['total']['num_requests'])
-            print("Log data types:")
+            print('Total lines analyzed: %d' % linecounter)
+            print('Total requests calculated: %d' % result['total']['count'])
+            print('Log data types:')
             pprint(result_types)

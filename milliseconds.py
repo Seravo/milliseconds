@@ -11,7 +11,7 @@ from pprint import pprint
 def add_counters(data, category):
 
     # Set baseline if first value
-    if result[category]['num_requests'] == 0:
+    if result[category]['count'] == 0:
         result[category]['max'] = data['duration']
         result[category]['min'] = data['duration']
 
@@ -22,16 +22,16 @@ def add_counters(data, category):
         result[category]['min'] = data['duration']
 
     # Increment counters
-    result[category]['num_requests'] += 1
+    result[category]['count'] += 1
     result[category]['sum'] += data['duration']
     result[category]['avg'] = \
-        int(result[category]['sum'] / result[category]['num_requests'])
+        int(result[category]['sum'] / result[category]['count'])
 
     return result
 
 
 bucket = {
-    "num_requests": 0,
+    'count': 0,
     'min': 0,
     'max': 0,
     'avg': 0,
@@ -39,17 +39,20 @@ bucket = {
     #  '95th_percentile': 0
 }
 result = {
-    "total": dict(bucket),
-    "cached": dict(bucket),
-    "uncached": dict(bucket),
-    "php_total": dict(bucket),
-    "php_cached": dict(bucket),
-    "php_uncached": dict(bucket),
-    "static": dict(bucket),
-    "internal": dict(bucket)
+    'total': dict(bucket),
+    'cache_none': dict(bucket),
+    'cache_hit': dict(bucket),
+    'cache_miss': dict(bucket),
+    'cache_other': dict(bucket),
+    '2xx': dict(bucket),
+    '3xx': dict(bucket),
+    '4xx': dict(bucket),
+    '5xx': dict(bucket),
+    'internal': dict(bucket)
 }
 
 debug = False
+
 result_types = {
   'request_type': dict(),
   'protocol': dict(),
@@ -116,25 +119,19 @@ if __name__ == '__main__':
                 data['duration'] = int(float(data['duration']) * 1000)
                 add_counters(data, 'total')
 
-            if data['server'] == '-':
-                add_counters(data, 'php_total')
-
-                if 'HIT' in data['cache']:
-                    add_counters(data, 'php_cached')
-                else:
-                    add_counters(data, 'php_uncached')
+            if '-' in data['cache'] or 'BYPASS' in data['cache']:
+                add_counters(data, 'cache_none')
+            elif 'HIT' in data['cache']:
+                add_counters(data, 'cache_hit')
+            elif 'MISS' in data['cache']:
+                add_counters(data, 'cache_miss')
             else:
-                add_counters(data, 'static')
+                add_counters(data, 'cache_other')
 
-            if 'HIT' in data['cache']:
-                add_counters(data, 'cached')
-            else:
-                add_counters(data, 'uncached')
+            status_class = data['status'][0]
+            add_counters(data, status_class + 'xx')
 
-            if 'Zabbix' in data['user_agent'] or \
-               'SWD' in data['user_agent'] or \
-               '400' == data['status'] or \
-               '408' == data['status']:
+            if 'Zabbix' in data['user_agent'] or 'SWD' in data['user_agent']:
                 add_counters(data, 'internal')
 
         print(json.dumps(result, indent=4))

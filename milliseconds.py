@@ -27,6 +27,20 @@ def add_counters(data, category):
     result[category]['avg'] = \
         int(result[category]['sum'] / result[category]['count'])
 
+    result[category]['bytes'] += data['bytes']
+
+    return result
+
+
+def get_top_10(result_type, result_type_dict):
+    result = dict()
+    for entry in sorted(
+            result_type_dict,
+            key=result_type_dict.__getitem__,
+            reverse=True)[0:9]:
+
+        result[entry] = result_types[result_type][entry]
+
     return result
 
 
@@ -36,6 +50,7 @@ bucket = {
     'max': 0,
     'avg': 0,
     'sum': 0,
+    'bytes': 0,
     #  '95th_percentile': 0
 }
 result = {
@@ -51,14 +66,13 @@ result = {
     'internal': dict(bucket)
 }
 
-debug = False
-
 result_types = {
   'request_type': dict(),
   'protocol': dict(),
   'status': dict(),
   'cache': dict(),
-  'server': dict()
+  'server': dict(),
+  'hostname': dict()
 }
 
 lineformat = (r''
@@ -105,18 +119,18 @@ if __name__ == '__main__':
                 pprint(l)
                 sys.exit(1)
 
-            # Debug log data types
-            if debug:
-                for type in result_types.keys():
-                    if data[type] not in result_types[type]:
-                        result_types[type][data[type]] = 1
-                    else:
-                        result_types[type][data[type]] += 1
+            # Collect each unique data type
+            for type in result_types.keys():
+                if data[type] not in result_types[type]:
+                    result_types[type][data[type]] = 1
+                else:
+                    result_types[type][data[type]] += 1
 
             # Analyze line and update counters
             if data:
                 # Convert to milliseconds
                 data['duration'] = int(float(data['duration']) * 1000)
+                data['bytes'] = int(data['bytes'])
                 add_counters(data, 'total')
 
             if '-' in data['cache'] or 'BYPASS' in data['cache']:
@@ -134,11 +148,15 @@ if __name__ == '__main__':
             if 'Zabbix' in data['user_agent'] or 'SWD' in data['user_agent']:
                 add_counters(data, 'internal')
 
+        # Extend results with top-10 lists for each result type
+        for result_type in result_types:
+            result['top-' + result_type] = get_top_10(result_type, result_types[result_type])
+
+        # Output results
         print(json.dumps(result, indent=4))
 
         # Debug: print log data types
+        debug = False
         if debug:
             print('Total lines analyzed: %d' % linecounter)
             print('Total requests calculated: %d' % result['total']['count'])
-            print('Log data types:')
-            pprint(result_types)

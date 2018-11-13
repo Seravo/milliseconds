@@ -67,12 +67,14 @@ result = {
 }
 
 result_types = {
+  'hostname': dict(),
+  'remote_addr': dict(),
+  'remote_user': dict(),
   'request_type': dict(),
   'protocol': dict(),
   'status': dict(),
   'cache': dict(),
-  'server': dict(),
-  'hostname': dict()
+  'server': dict()
 }
 
 lineformat = (r''

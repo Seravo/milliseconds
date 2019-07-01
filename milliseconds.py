@@ -84,7 +84,7 @@ lineformat = (r''
               '(?P<remote_user>[^ ]+) '
               '\[(?P<time>.+)\] '
               '"(?P<request_type>[A-Z_]+) '  # Clients can name their methods whatever, e.g. CCM_POST
-              '(?P<request_url>[^ ]+) '
+              '(?P<request_url>[^"]+) '
               '(?P<protocol>[^ ]+)" '
               '(?P<status>[0-9]+) '
               '(?P<bytes>[0-9]+) '

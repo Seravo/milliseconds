@@ -147,7 +147,9 @@ if __name__ == '__main__':
             status_class = data['status'][0]
             add_counters(data, status_class + 'xx')
 
-            if 'Zabbix' in data['user_agent'] or 'SWD' in data['user_agent']:
+            if 'Zabbix' in data['user_agent'] or \
+               'Seravo' in data['user_agent'] or \
+               'SWD' in data['user_agent']:
                 add_counters(data, 'internal')
 
         # Extend results with top-10 lists for each result type

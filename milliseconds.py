@@ -69,37 +69,36 @@ result = {
 }
 
 result_types = {
-  'hostname': dict(),
-  'remote_addr': dict(),
-  'remote_user': dict(),
-  'request_type': dict(),
-  'protocol': dict(),
-  'status': dict(),
-  'cache': dict(),
-  'server': dict()
+    'hostname': dict(),
+    'remote_addr': dict(),
+    'remote_user': dict(),
+    'request_type': dict(),
+    'protocol': dict(),
+    'status': dict(),
+    'cache': dict(),
+    'server': dict()
 }
 
-lineformat = (r''
-              '(?P<hostname>[^ ]+) '
-              '(?P<remote_addr>[^ ]+) '
-              '- '
-              '(?P<remote_user>[^ ]+) '
-              '\[(?P<time>.+)\] '
-              '"(?P<request_type>[A-Z_]+) '  # Clients can name their methods whatever, e.g. CCM_POST
-              '(?P<request_url>[^"]+) '
-              '(?P<protocol>[^ ]+)" '
-              '(?P<status>[0-9]+) '
-              '(?P<bytes>[0-9]+) '
-              '"(?P<referer>[^"]*)" '
-              '"(?P<user_agent>[^"]*)" '
-              '(?P<cache>[A-Z-]+) '
-              '"(?P<server>[^"]+)" '
-              '(?P<duration>[0-9\.]+)\n'
-              )
+lineformat = (
+    r''
+    '(?P<hostname>[^ ]+) '
+    '(?P<remote_addr>[^ ]+) '
+    '- '
+    '(?P<remote_user>[^ ]+) '
+    '\[(?P<time>.+)\] '
+    '"(?P<request_type>[A-Z_]+) '  # Clients can name their methods whatever, e.g. CCM_POST
+    '(?P<request_url>[^"]+) '
+    '(?P<protocol>[^ ]+)" '
+    '(?P<status>[0-9]+) '
+    '(?P<bytes>[0-9]+) '
+    '"(?P<referer>[^"]*)" '
+    '"(?P<user_agent>[^"]*)" '
+    '(?P<cache>[A-Z-]+) '
+    '"(?P<server>[^"]+)" '
+    '(?P<duration>[0-9\.]+)\n')
 
 lineregex = re.compile(lineformat)
 linecounter = 0
-
 
 if __name__ == '__main__':
 

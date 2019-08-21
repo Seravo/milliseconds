@@ -63,6 +63,8 @@ result = {
     '3xx': dict(bucket),
     '4xx': dict(bucket),
     '5xx': dict(bucket),
+    # sites in maintenance mode should not be counted in the 5xx error bucket
+    '503': dict(bucket),
     'internal': dict(bucket)
 }
 
@@ -144,8 +146,11 @@ if __name__ == '__main__':
             else:
                 add_counters(data, 'cache_other')
 
-            status_class = data['status'][0]
-            add_counters(data, status_class + 'xx')
+            # Track 503 status separately from other 5xx responses
+            if data['status'] == '503':
+                add_counters(data, '503')
+            else:
+                add_counters(data, data['status'][0] + 'xx')
 
             if 'Zabbix' in data['user_agent'] or \
                'Seravo' in data['user_agent'] or \

@@ -76,7 +76,6 @@ result_types = {
     'protocol': dict(),
     'status': dict(),
     'cache': dict(),
-    'server': dict()
 }
 
 lineformat = (

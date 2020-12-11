@@ -79,24 +79,24 @@ result_types = {
 }
 
 lineformat = (
-    r''
-    '(?P<hostname>[^ ]+) '
-    '(?P<remote_addr>[^ ]+) '
-    '- '
-    '(?P<remote_user>[^ ]+) '
-    '\[(?P<time>.+)\] '
-    '"(?P<request_type>[A-Z_]+) '  # Clients can name their methods whatever, e.g. CCM_POST
-    '(?P<request_url>[^"]+) '
-    '(?P<protocol>[^ ]+)" '
-    '(?P<status>[0-9]+) '
-    '(?P<bytes>[0-9]+) '
-    '"(?P<referer>[^"]*)" '
-    '"(?P<user_agent>[^"]*)" '
-    '(?P<cache>[A-Z-]+) '
-    '"(?P<server>[^"]+)" '
-    '(?P<duration>[0-9\.]+)\n')
+    r'(?P<hostname>[^ ]+) '
+    r'(?P<remote_addr>[^ ]+) '
+    r'- '
+    r'(?P<remote_user>[^ ]+) '
+    r'\[(?P<time>.+)\] '
+    # Clients can name their methods whatever, e.g. CCM_POST
+    r'"(?P<request_type>[A-Z_]+) '
+    r'(?P<request_url>[^"]+) '
+    r'(?P<protocol>[^ ]+)" '
+    r'(?P<status>[0-9]+) '
+    r'(?P<bytes>[0-9]+) '
+    r'"(?P<referer>[^"]*)" '
+    r'"(?P<user_agent>[^"]*)" '
+    r'(?P<cache>[A-Z-]+) '
+    r'"(?P<server>[^"]+)" '
+    r'(?P<duration>[0-9\\.]+)\n')
 
-lineregex = re.compile(lineformat)
+re.compile(lineformat)  # Compile the regex to fail if it is invalid
 linecounter = 0
 
 if __name__ == '__main__':
@@ -157,7 +157,8 @@ if __name__ == '__main__':
 
         # Extend results with top-10 lists for each result type
         for result_type in result_types:
-            result['top-' + result_type] = get_top_10(result_type, result_types[result_type])
+            result['top-' + result_type] = get_top_10(
+                result_type, result_types[result_type])
 
         # Output results
         print(json.dumps(result, indent=4))

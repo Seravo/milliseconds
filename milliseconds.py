@@ -110,8 +110,8 @@ if __name__ == '__main__':
             match = pattern.search(l)
 
             if not match:
-                print('Unexpected log line contents:')
-                pprint(l)
+                print('Unexpected log line contents:', file=sys.stderr)
+                pprint(l, stream=sys.stderr)
                 # On error, just skip this line and continue with the next one
                 # Known issue: eg. invalid request might cause empty $request
                 # in nginx, thus producting empty "" after timestamp. Current
@@ -122,8 +122,9 @@ if __name__ == '__main__':
                 data = match.groupdict()
 
             if len(data) != 14:
-                print('Unexpected log line length: %d' % len(data))
-                pprint(l)
+                print('Unexpected log line length: %d' % len(data),
+                      file=sys.stderr)
+                pprint(l, stream=sys.stderr)
                 sys.exit(1)
 
             # Collect each unique data type

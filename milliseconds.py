@@ -112,7 +112,12 @@ if __name__ == '__main__':
             if not match:
                 print('Unexpected log line contents:')
                 pprint(l)
-                sys.exit(1)
+                # On error, just skip this line and continue with the next one
+                # Known issue: eg. invalid request might cause empty $request
+                # in nginx, thus producting empty "" after timestamp. Current
+                # regexp fails with that.
+                # FIXME: Should fix the regexp to cope with known common errors
+                continue
             else:
                 data = match.groupdict()
 

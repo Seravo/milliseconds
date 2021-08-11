@@ -96,7 +96,7 @@ lineformat = (
     r'"(?P<server>[^"]+)" '
     r'(?P<duration>[0-9\\.]+)\n')
 
-re.compile(lineformat)  # Compile the regex to fail if it is invalid
+pattern = re.compile(lineformat)  # Compile the regex to fail if it is invalid
 linecounter = 0
 
 if __name__ == '__main__':
@@ -107,7 +107,7 @@ if __name__ == '__main__':
         for l in f.readlines():
             linecounter += 1
 
-            match = re.search(lineformat, l)
+            match = pattern.search(l)
 
             if not match:
                 print('Unexpected log line contents:')

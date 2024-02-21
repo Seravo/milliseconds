@@ -59,6 +59,7 @@ result = {
     'cache_hit': dict(bucket),
     'cache_miss': dict(bucket),
     'cache_other': dict(bucket),
+    '1xx': dict(bucket),
     '2xx': dict(bucket),
     '3xx': dict(bucket),
     '4xx': dict(bucket),
